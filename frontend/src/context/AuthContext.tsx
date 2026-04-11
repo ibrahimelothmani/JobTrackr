@@ -3,14 +3,14 @@ import { login as apiLogin } from "../api/authApi";
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const isAuthenticated = Boolean(token);
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     setError(null);
     try {
