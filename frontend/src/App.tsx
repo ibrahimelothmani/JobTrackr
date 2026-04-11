@@ -4,6 +4,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Applications from "./pages/Applications";
 
 
 export default function App() {
