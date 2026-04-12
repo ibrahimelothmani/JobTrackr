@@ -1,12 +1,20 @@
 import { createContext, useContext, useState } from "react";
 import { login as apiLogin } from "../api/authApi";
 
-const AuthContext = createContext(null);
+interface AuthContextType {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = Boolean(token);
 
@@ -17,8 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await apiLogin(email, password);
       localStorage.setItem("token", data.access_token);
       setToken(data.access_token);
-    } catch (err) {
-      setError(err.response?.data?.detail || "Login failed");
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: { detail?: string } } })?.response?.data
+          ?.detail ?? "Login failed";
+      setError(message);
       throw err;
     } finally {
       setIsLoading(false);
@@ -39,4 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
+};

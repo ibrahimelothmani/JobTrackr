@@ -10,7 +10,12 @@ app = FastAPI(title="JobTrackr API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React dev server
+    allow_origins=[
+        "http://localhost",        # Docker nginx (port 80)
+        "http://localhost:80",     # explicit port form
+        "http://localhost:3000",   # Vite dev server
+        "http://localhost:5173",   # Vite alternative port
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

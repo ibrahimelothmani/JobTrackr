@@ -30,7 +30,7 @@ def create_application(
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
 
-    app = models.Application(**app_in.dict(), user_id=current_user.id)
+    app = models.Application(**app_in.model_dump(), user_id=current_user.id)
     db.add(app)
     db.commit()
     db.refresh(app)
@@ -64,7 +64,7 @@ def update_application(
     if not app:
         raise HTTPException(status_code=404, detail="Application not found")
 
-    for field, value in app_in.dict(exclude_unset=True).items():
+    for field, value in app_in.model_dump(exclude_unset=True).items():
         setattr(app, field, value)
     db.commit()
     db.refresh(app)
