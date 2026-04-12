@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import auth, applications, stats
+from .database import engine
+from . import models
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="JobTrackr API", version="1.0.0")
 
