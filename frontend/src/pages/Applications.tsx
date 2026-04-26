@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { getApplications, createApplication } from "../api/applicationsApi";
 import { useAuth } from "../context/AuthContext";
 import KanbanColumn from "../components/KanbanColumn";
+import type { ApplicationStatus } from "../types/application";
 
-const STATUSES = ["applied", "screening", "interview", "offer", "rejected"];
+const STATUSES: ApplicationStatus[] = ["applied", "screening", "interview", "offer", "rejected"];
 
 export default function Applications() {
   const { logout } = useAuth();

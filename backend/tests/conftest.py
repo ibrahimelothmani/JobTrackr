@@ -1,7 +1,12 @@
+import os
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+os.environ.setdefault("DATABASE_URL", "sqlite:///./test.db")
+os.environ.setdefault("SECRET_KEY", "test-secret-key")
+
 from app.main import app
 from app.database import Base
 from app.deps import get_db
@@ -34,7 +39,10 @@ def client():
 def auth_client(client):
     """A client that is already logged in — returns (client, token)."""
     client.post("/auth/register", json={"email": "test@test.com", "password": "testpass123"})
-    res = client.post("/auth/login", json={"email": "test@test.com", "password": "testpass123"})
+    res = client.post(
+        "/auth/login",
+        data={"username": "test@test.com", "password": "testpass123"},
+    )
     token = res.json()["access_token"]
     client.headers.update({"Authorization": f"Bearer {token}"})
     return client

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, applications, stats
+from .routers import auth, applications, companies, stats
 from .database import engine
 from . import models
 
@@ -22,6 +22,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(companies.router)
 app.include_router(applications.router)
 app.include_router(stats.router)
 

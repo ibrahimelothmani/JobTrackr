@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { updateApplication, deleteApplication } from "../api/applicationsApi";
+import type { Application, ApplicationStatus } from "../types/application";
 
-const STATUS_OPTIONS = ["applied", "screening", "interview", "offer", "rejected"];
+const STATUS_OPTIONS: ApplicationStatus[] = ["applied", "screening", "interview", "offer", "rejected"];
 
-const STATUS_COLORS = {
+const STATUS_COLORS: Record<ApplicationStatus, string> = {
   applied:   "bg-blue-50  text-blue-700",
   screening: "bg-amber-50 text-amber-700",
   interview: "bg-purple-50 text-purple-700",
@@ -11,11 +12,11 @@ const STATUS_COLORS = {
   rejected:  "bg-red-50   text-red-700",
 };
 
-export default function ApplicationCard({ app, onUpdate, onDelete }: { app: any; onUpdate: (app: any) => void; onDelete: (id: number) => void }) {
+export default function ApplicationCard({ app, onUpdate, onDelete }: { app: Application; onUpdate: (app: Application) => void; onDelete: (id: string) => void }) {
   const [saving, setSaving]   = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const handleStatusChange = async (newStatus: string) => {
+  const handleStatusChange = async (newStatus: ApplicationStatus) => {
     setSaving(true);
     try {
       const updated = await updateApplication(app.id, { status: newStatus });
@@ -52,7 +53,7 @@ export default function ApplicationCard({ app, onUpdate, onDelete }: { app: any;
 
       <select
         value={app.status}
-        onChange={(e) => handleStatusChange(e.target.value)}
+        onChange={(e) => handleStatusChange(e.target.value as ApplicationStatus)}
         disabled={saving}
         className={`mt-2 w-full text-xs rounded-md px-2 py-1 border-0 font-medium cursor-pointer ${STATUS_COLORS[app.status]}`}
       >
