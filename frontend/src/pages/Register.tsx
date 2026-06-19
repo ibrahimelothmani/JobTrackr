@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { isAxiosError } from "axios";
 import { register } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 
@@ -20,7 +21,11 @@ export default function Register() {
       await login(email, password); // auto-login after register
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.detail || "Registration failed");
+      if (isAxiosError(err)) {
+        setError((err.response?.data as { detail?: string })?.detail || "Registration failed");
+      } else {
+        setError("Registration failed");
+      }
     } finally {
       setLoading(false);
     }

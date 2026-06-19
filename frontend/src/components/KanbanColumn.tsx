@@ -1,6 +1,7 @@
 import ApplicationCard from "./ApplicationCard";
+import type { Application, ApplicationStatus } from "../types/application";
 
-const COLUMN_STYLES = {
+const COLUMN_STYLES: Record<ApplicationStatus, { label: string; dot: string }> = {
   applied:   { label: "Applied",   dot: "bg-blue-400" },
   screening: { label: "Screening", dot: "bg-amber-400" },
   interview: { label: "Interview", dot: "bg-purple-400" },
@@ -8,7 +9,7 @@ const COLUMN_STYLES = {
   rejected:  { label: "Rejected",  dot: "bg-red-400" },
 };
 
-export default function KanbanColumn({ status, apps, onUpdate, onDelete }: { status: string; apps: any[]; onUpdate: (app: any) => void; onDelete: (id: number) => void }) {
+export default function KanbanColumn({ status, apps, onUpdate, onDelete }: { status: ApplicationStatus; apps: Application[]; onUpdate: (app: Application) => void; onDelete: (id: string) => void }) {
   const { label, dot } = COLUMN_STYLES[status];
 
   return (
